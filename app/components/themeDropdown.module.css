@@ -1,0 +1,48 @@
+.container {
+    border-radius: 15%;
+    border: solid 1px var(--color-borders-2);
+    box-shadow: 4px 4px 4px #a3a3a3;
+    padding: 25px;
+    width: 350px;
+    height: 350px;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttonContainer button {
+    outline: none;
+    background-color: unset;
+    font-family: inherit;
+    border: solid 2px black;
+    margin: 10px;
+    padding: 10px;
+    min-width: 100px;
+    height: 100px;
+}
+
+.buttonContainer button:hover {
+    box-shadow: 0px 0px 10px rgba(0, 255, 255, .5);
+}
+/*
+
+.light {
+
+}
+
+.blueFiltered {
+
+}
+
+.dark {
+
+}
+
+.night {
+
+}
+*/

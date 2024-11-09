@@ -4,3 +4,48 @@
     height: 100%;
     width: 100%;
 }
+
+.button {
+    border: none;
+    font-family: inherit;
+    font-size: medium;
+    text-decoration: none;
+    background-color: inherit;
+    padding: 5px;
+    margin: 5px;
+    border: 2px solid var(--color-borders-2);
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: var(--color-background-focused);
+}
+
+.button:active {
+    background-color: var(--color-button-active);
+}
+
+.textInput {
+    font-size: medium;
+    background-color: inherit;
+    border: none;
+    border-bottom: 1px solid var(--color-borders-2); 
+    padding: 3px 7px;
+    width: 100%;
+    margin: 10px 5px;
+}
+
+.textInput:hover {
+    background-color: var(--color-background-focused);
+}
+
+.textInput:focus {
+    background-color: var(--color-background-focused);
+}
+
+.errMsg {
+    background-color: rgba(236, 157, 10, 0.1);
+    font-size: medium;
+    text-align: center;
+    border-bottom: solid 2px rgba(236, 157, 10, 0.4);
+}
