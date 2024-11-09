@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  email       String    @unique
+  password    String    @unique
+  dateCreated DateTime
+  images      Image[]
+  notes       Note[]
+}
+
+model Image {
+  id            Int       @id @default(autoincrement())
+  dateUploaded  DateTime  @default(now())
+  name          String
+  uploaderID    String       
+  noteID        Int
+  uploader      User      @relation(fields: [uploaderID], references: [id], onDelete: Cascade)
+  note          Note      @relation(fields: [noteID], references: [id], onDelete: Cascade)
+}
+
+model Note {
+  id            Int       @id @default(autoincrement())
+  dateUploaded  DateTime  @default(now())
+  lastUpdatedOn DateTime  @default(now())
+  name          String
+  images        Image[]
+  uploaderID    String
+  uploader      User      @relation(fields: [uploaderID], references: [id], onDelete: Cascade)
+}

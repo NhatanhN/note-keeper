@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcrypt": "^5.1.1",
     "jsonwebtoken": "^9.0.2",
     "next": "15.0.2",
     "note-keeper": "file:",
@@ -17,6 +19,7 @@
   },
   "devDependencies": {
     "eslint": "^8",
-    "eslint-config-next": "15.0.2"
+    "eslint-config-next": "15.0.2",
+    "prisma": "^5.22.0"
   }
 }
