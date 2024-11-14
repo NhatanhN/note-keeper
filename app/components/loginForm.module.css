@@ -1,7 +1,8 @@
 .errMsg {
-    height: 32px;
+    height: max-content;
     animation: revealErrMsg 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
-    padding: 6px 32px;
+    padding: 6px 0px;
+    width: 100%;
 }
 
 @keyframes revealErrMsg {
@@ -13,7 +14,7 @@
     to {
         opacity: 1; 
         height: 32px;
-        padding: 6px 32px;
+        padding: 6px 0px;
     }
 }
 
@@ -21,6 +22,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 50px;
-    max-height: 50px;
+    min-height: 60px;
+    max-height: 60px;
 }

@@ -1,19 +1,21 @@
 import styles from "./themeDropdown.module.css"
+import { useContext } from "react"
+import { GlobalContext } from "../applicationContexts/GlobalContext"
 
-const switchTheme = (theme) => {
-    console.log(theme)
-}
 
 export default function DropdownMenu() {
+    const { setTheme } = useContext(GlobalContext)
+
+
     return (
         <div className={styles.container}>
             <p>Select your theme</p>
             <br />
             <div className={styles.buttonContainer}>
-                <button onClick={e => switchTheme("light")}>Light</button>
-                <button onMouseDown={e => switchTheme("blue-filtered")}>Blue-filtered</button>
-                <button onMouseDown={e => switchTheme("dark")}>Dark</button>
-                <button onMouseDown={e => switchTheme("night")}>Night</button>
+                <button onClick={e => setTheme("light")}>Light</button>
+                <button onMouseDown={e => setTheme("blue-filtered")}>Blue-filtered</button>
+                <button onMouseDown={e => setTheme("dark")}>Dark</button>
+                <button onMouseDown={e => setTheme("night")}>Night</button>
             </div>
         </div>
     )

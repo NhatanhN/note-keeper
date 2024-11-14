@@ -3,22 +3,78 @@ import styles from "./LoginForm.module.css"
 import { useState } from "react"
 
 export default function LoginForm({ isRegistering }) {
-    const [username, setUsername] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
     const [statusMsg, setStatusMsg] = useState("")
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault()
-        setStatusMsg(statusMsg == "" ? "test message" : "");
-        console.log("login")
+
+        console.log("login pressed")
+        setStatusMsg("")
+        const username = e.target.username.value
+        const password = e.target.password.value
+
+        const res = await fetch("/api/user/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
+        })
+
+        if (!res.ok) {
+            const { error } = await res.json()
+            setStatusMsg(error)
+            return
+        }
+
+        location.reload()
     }
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault()
-        setStatusMsg(statusMsg == "" ? "test message" : "");
-        console.log("register")
+        setStatusMsg("")
+        const username = e.target.username.value
+        const email = e.target.email.value
+        const password = e.target.password.value
+        const confirmPassword = e.target.confirmPassword.value
+
+        if (password != confirmPassword) {
+            setStatusMsg("Passwords do not match")
+            return
+        }
+        if (username.length < 3) {
+            setStatusMsg("Username must be at least 3 characters")
+            return
+        }
+        /* turned this off for easier testing
+        if (password.length < 8) {
+            setStatusMsg("Password must be at least 8 characters")
+            return
+        }
+         */
+
+        const res = await fetch("/api/user/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                email,
+                password
+            })
+        })
+        
+        if (!res.ok) {
+            const { error } = await res.json()
+            setStatusMsg(error)
+            return
+        }
+
+        location.reload()
     }
 
     if (isRegistering) {

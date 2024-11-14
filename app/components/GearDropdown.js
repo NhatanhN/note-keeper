@@ -1,6 +1,7 @@
 import styles from "./gearDropdown.module.css"
 import baseStyles from "./baseStyles.module.css"
-import { useState } from "react"
+import { useState, useContext } from "react"
+import { GlobalContext } from "../applicationContexts/GlobalContext"
 import LoginForm from "./LoginForm"
 
 export default function GearDropdown() {
@@ -11,10 +12,18 @@ export default function GearDropdown() {
         SETTINGS: "settings"
     }
 
-    const [displayedScreen, setDisplayedScreen] = useState(SCREENS.WELCOME)
+    const { username } = useContext(GlobalContext)
+
+    const [displayedScreen, setDisplayedScreen] = useState(username ? SCREENS.SETTINGS : SCREENS.WELCOME)
 
     const changeScreen = (screen) => {
         setDisplayedScreen(screen)
+    }
+
+    const logout = () => {
+        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+        document.cookie = "sessionToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+        location.reload()
     }
 
     return (
@@ -85,8 +94,12 @@ export default function GearDropdown() {
                     <p>Settings</p>
                     <br />
                     <div className={styles.buttonContainer}>
-                        <button className={`${baseStyles.button} ${styles.button}`}>Back</button>
-                        <button className={`${baseStyles.button} ${styles.button}`}>Log out</button>
+                        <button
+                            className={`${baseStyles.button} ${styles.button}`}
+                            onClick={logout}
+                        >
+                            Log out
+                        </button>
                     </div>
                 </>
             }

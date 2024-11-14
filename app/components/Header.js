@@ -1,16 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useState } from "react"
+
 import basestyles from "./baseStyles.module.css"
 import styles from "./header.module.css"
 import Image from "next/image"
 import ThemeDropdown from "./ThemeDropdown"
 import GearDropdown from "./GearDropdown"
+import { GlobalContext } from "@/app/applicationContexts/GlobalContext"
 
 export default function Header() {
-    const tempData = {
-        title: "Log in to save notes"
-    }
+    const username = useContext(GlobalContext).username || "Log in to save notes"
+
     const [themeDropdownVisible, setThemeDropdownVisible] = useState(false)
     const [gearDropdownVisible, setGearDropdownVisible] = useState(false)
     const [playThemeRevealAnim, setPlayThemeRevealAnim] = useState(false)
@@ -18,7 +19,7 @@ export default function Header() {
 
     const toggleDropdown = (selection) => {
         if (selection == "theme") {
-            if (themeDropdownVisible){
+            if (themeDropdownVisible) {
                 setPlayThemeRevealAnim(false)
                 setTimeout(() => {
                     setThemeDropdownVisible(false)
@@ -32,7 +33,7 @@ export default function Header() {
                 }, 200)
             }
         } else {
-            if (gearDropdownVisible){
+            if (gearDropdownVisible) {
                 setPlayGearRevealAnim(false)
                 setTimeout(() => {
                     setGearDropdownVisible(false)
@@ -46,12 +47,12 @@ export default function Header() {
                 }, 200)
             }
         }
-        
+
     }
 
     return (
         <div className={`${basestyles.container} ${styles.container}`}>
-            <p className={styles.title}>{tempData.title}</p>
+            <p className={styles.title}>{username}</p>
             <div className={styles.spacing} />
             <div>
                 <div
