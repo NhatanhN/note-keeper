@@ -2,13 +2,13 @@
 :root {
     font-size: 20px;
     font-family: Arial, Helvetica, sans-serif;
-    --color-background: rgb(238, 238, 240);
-    --color-background-2: rgb(252, 252, 252);
-    --color-background-focused: rgba(0, 0, 0, .1);
-    --color-borders: rgb(27, 28, 29);
-    --color-borders-2: rgb(150, 152, 155);
-    --color-button-active: rgba(0, 0, 0, 0.2);
-    color: rgb(0, 0, 0);
+    --color-background: #eeeeee;
+    --color-background-2: #ffffff;
+    --color-background-focused: #dddddd;
+    --color-borders: #656565;
+    --color-borders-2: #888888;
+    --color-button-active: #cccccc;
+    color: #00171F;
 }
 
 * {

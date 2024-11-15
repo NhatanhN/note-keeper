@@ -1,22 +1,34 @@
 const light = {
-    "--color-background": "rgb(238, 238, 240)",
-    "--color-background-focused": "rgba(0, 0, 0, .1)",
-    "--color-borders": "rgb(27, 28, 29)",
-    "--color-borders-2": "rgb(150, 152, 155)",
-    "--color-button-active": "rgba(0, 0, 0, 0.2)",
-    "color": "rgb(0, 0, 0)",
+    "--color-background": "#eeeeee",
+    "--color-background-2": "#ffffff",
+    "--color-background-focused": "#dddddd",
+    "--color-borders": "#656565",
+    "--color-borders-2": "#888888",
+    "--color-button-active": "#cccccc",
+    "color": "#00171F",
 }
 
 const dark = {
-    "--color-background": "rgb(18, 18, 16)",
-    "--color-background-focused": "rgba(255, 255, 255, 0.1)",
-    "--color-borders": "rgb(229, 228, 227)",
-    "--color-borders-2": "rgb(106, 104, 101)",
-    "--color-button-active": "rgba(255, 255, 255, 0.2)",
-    "color": "rgb(228, 228, 228)",
+    "--color-background": "#121212",
+    "--color-background-2": "#1f1f1f",
+    "--color-background-focused": "#282828",
+    "--color-borders": "#1861a9",
+    "--color-borders-2": "#1861a9",
+    "--color-button-active": "#3f3f3f",
+    "color": "#eeeeee",
+}
+const night = {
+    "--color-background": "#000000",
+    "--color-background-2": "#101010",
+    "--color-background-focused": "#4e4e4e",
+    "--color-borders": "#421a1a",
+    "--color-borders-2": "#56302f",
+    "--color-button-active": "#353535",
+    "color": "#cccccc",
 }
 
 export {
     light,
-    dark
+    dark,
+    night
 }

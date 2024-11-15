@@ -2,7 +2,7 @@
 
 import { createContext } from "react"
 import { useState, useEffect } from "react"
-import { light, dark } from "@/app/themes"
+import { light, dark, night } from "@/app/themes"
 
 /**
  * Global context for the application. Reads information from cookies. Whenever
@@ -28,11 +28,13 @@ function GlobalContextProvider({ children }) {
                 setUsername(cookies[cookie].split("=")[1])
             }
         }
-        
+
         if (theme == "light") {
             changeTheme(light)
         } else if (theme == "dark") {
             changeTheme(dark)
+        } else if (theme == "night") {
+            changeTheme(night)
         }
     })
 

@@ -169,7 +169,7 @@ export default function NoteEditor() {
                     <form onSubmit={addTag}>
                         <label htmlFor="tag">Add a tag</label>
                         <br />
-                        <input className={`${basestyles.textInput} ${styles.textInput}`} type="text" name="tag" id="tag" />
+                        <input className={`${basestyles.textInput} ${styles.textInput}`} type="text" name="tag" id="tag" placeholder="tag name"/>
                         <button className={`${basestyles.button} ${styles.button}`} type="submit">add</button>
                     </form>
                 </div>
@@ -202,8 +202,8 @@ export default function NoteEditor() {
                     <div className={styles.icon} onClick={() => toggleItalic()}>
                         <Image
                             src="/italic.svg"
-                            width={40}
-                            height={40}
+                            width={35}
+                            height={35}
                             alt="italicize text"
                         />
                     </div>

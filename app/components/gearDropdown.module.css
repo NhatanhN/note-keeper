@@ -1,7 +1,7 @@
 .container {
     border-radius: 15%;
     border: solid 1px var(--color-borders-2);
-    box-shadow: 4px 4px 4px #a3a3a3;
+    background-color: var(--color-background);
     padding: 25px;
     width: 350px;
     height: 350px;

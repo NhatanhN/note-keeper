@@ -13,7 +13,6 @@ export default function DropdownMenu() {
             <br />
             <div className={styles.buttonContainer}>
                 <button onClick={e => setTheme("light")}>Light</button>
-                <button onMouseDown={e => setTheme("blue-filtered")}>Blue-filtered</button>
                 <button onMouseDown={e => setTheme("dark")}>Dark</button>
                 <button onMouseDown={e => setTheme("night")}>Night</button>
             </div>
