@@ -60,10 +60,10 @@ export default function Header() {
                     onClick={() => toggleDropdown("theme")}
                 >
                     <Image
-                        src="/placeholder.svg"
+                        src="/paint.svg"
                         width={40}
                         height={40}
-                        alt="placeholder"
+                        alt="themes"
                     />
                 </div>
                 {themeDropdownVisible &&
@@ -78,10 +78,10 @@ export default function Header() {
                     className={`${styles.dropdownButton} ${playGearRevealAnim ? styles.placeholderAnim : ""}`}
                 >
                     <Image
-                        src="/placeholder.svg"
+                        src="/gear.svg"
                         width={40}
                         height={40}
-                        alt="placeholder"
+                        alt="settings"
                     />
                 </div>
                 {gearDropdownVisible &&

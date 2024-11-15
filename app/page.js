@@ -19,7 +19,6 @@ export default function Home() {
                 <div className={styles.noteEditor}>
                     <NoteEditor />
                 </div>
-
             </GlobalContextProvider>
         </div>
     );

@@ -1,8 +1,8 @@
 .widescreenOrganization {
   display: grid;
-  min-height: 100vh;
-  grid-template-columns: max-content auto;
-  grid-template-rows: 3rem auto;
+  height: 100vh;
+  grid-template-columns: 8rem auto;
+  grid-template-rows: 6vh 94vh;
 }
 
 .header {
@@ -17,5 +17,4 @@
 .noteEditor {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
-  /*overflow-y: scroll;*/
 }

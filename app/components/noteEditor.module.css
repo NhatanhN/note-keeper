@@ -1,3 +1,91 @@
 .container {
+    background-color: var(--color-background);
     border-left: 1px solid var(--color-borders);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.note {
+    overflow-wrap: anywhere;
+    padding: 60px;
+    width: 750px;
+    flex: 1;
+    background-color: var(--color-background-2);
+}
+
+.note > img {
+    display: block;
+}
+
+.overlay {
+    position: absolute;
+    height: 94vh;
+    top: 5vh;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.modal {
+    position: absolute;
+    top: 10vh;
+    width: 400px;
+    height: 130px;
+    border-radius: 12px;
+    border: 1px solid var(--color-borders-2);
+    background-color: var(--color-background);
+    animation: reveal .25s;
+    transition: .25s cubic-bezier(0.165, 0.84, 0.44, 1);
+    opacity: 0;
+    padding: 20px;
+}
+
+.revealModal {
+    opacity: 1;
+}
+
+@keyframes reveal {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.tagList {
+    display: flex;
+    width: 90%;
+    height: 1.7rem;
+    flex-direction: row-reverse;
+}
+
+.button {
+    border-width: 1px;
+    padding: 3px 7px;
+}
+
+.textInput {
+    margin: 10px 0px;
+}
+
+.tagContainer {
+    margin-top: 10px;
+}
+
+.addTag {
+    padding: 5px;
+}
+
+.formatPalette {
+    flex-grow: 1;
+}
+
+.icon {
+    margin: 5px;
+    padding: 5px;
+}
+
+.icon:hover {
+    background-color: var(--color-background-focused);
 }
