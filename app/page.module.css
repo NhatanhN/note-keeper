@@ -1,7 +1,7 @@
 .widescreenOrganization {
   display: grid;
   height: 100vh;
-  grid-template-columns: 8rem auto;
+  grid-template-columns: 10rem auto;
   grid-template-rows: 6vh 94vh;
 }
 

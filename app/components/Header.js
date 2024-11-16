@@ -1,21 +1,31 @@
 "use client"
 
-import { useContext, useState } from "react"
+import { useEffect, useState } from "react"
 
 import basestyles from "./baseStyles.module.css"
 import styles from "./header.module.css"
 import Image from "next/image"
 import ThemeDropdown from "./ThemeDropdown"
 import GearDropdown from "./GearDropdown"
-import { GlobalContext } from "@/app/applicationContexts/GlobalContext"
 
 export default function Header() {
-    const username = useContext(GlobalContext).username || "Log in to save notes"
-
+    const [username, setUsername] = useState("")
     const [themeDropdownVisible, setThemeDropdownVisible] = useState(false)
     const [gearDropdownVisible, setGearDropdownVisible] = useState(false)
     const [playThemeRevealAnim, setPlayThemeRevealAnim] = useState(false)
     const [playGearRevealAnim, setPlayGearRevealAnim] = useState(false)
+
+    useEffect(() => {
+        if (document.cookie.includes("username")) {
+            for (let cookie of document.cookie.split("; ")) {
+                if (cookie.includes("username")) {
+                    setUsername(cookie.split("=")[1])
+                }
+            }
+        } else {
+            setUsername("guest")
+        }
+    }, [])
 
     const toggleDropdown = (selection) => {
         if (selection == "theme") {

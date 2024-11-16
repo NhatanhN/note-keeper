@@ -4,53 +4,43 @@ import { useState, useEffect } from "react"
 import basestyles from "./baseStyles.module.css"
 import styles from "./noteEditor.module.css"
 import Image from "next/image"
-import Tag from "./Tag"
 
-export default function NoteEditor() {
-    const [tags, setTags] = useState([])
-    const [tagModalVisible, setTagModalVisible] = useState(false)
-    const [playTagRevealAnim, setPlayTagRevealAnim] = useState(false)
+export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpdate }) {
+    /* note metadata state */
+    const [name, setName] = useState(noteName)
+
+    /* gui + other state */
     const [saveModalVisible, setSaveModalVisible] = useState(false)
     const [playSaveRevealAnim, setPlaySaveRevealAnim] = useState(false)
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [saveStatus, setSaveStatus] = useState("")
 
     useEffect(() => {
-        setIsLoggedIn(document.cookie.includes("sessionToken"))
-    }, [])
+        (async () => {
+            if (noteID != -1) {
+                const res = await fetch(`/api/note?noteID=${noteID}`)
+                const editor = document.getElementById("editor")
+                editor.innerHTML = await res.text()
+            }
+            setIsLoggedIn(document.cookie.includes("sessionToken"))
+            setName(noteName)
+            setIsLoading(false)
+        })()
+    }, [noteID, noteName])
 
     /* overlay functions */
 
-    const toggleModal = (selection) => {
+    const toggleModal = () => {
         setSaveStatus("")
-        if (selection == "save") {
-            if (saveModalVisible) {
-                setPlaySaveRevealAnim(false)
-                setTimeout(() => {
-                    setSaveModalVisible(false)
-                }, 200)
-            } else {
-                setSaveModalVisible(true)
-                setPlaySaveRevealAnim(true)
-                setPlayTagRevealAnim(false)
-                setTimeout(() => {
-                    setTagModalVisible(false)
-                }, 200)
-            }
+        if (saveModalVisible) {
+            setPlaySaveRevealAnim(false)
+            setTimeout(() => {
+                setSaveModalVisible(false)
+            }, 200)
         } else {
-            if (tagModalVisible) {
-                setPlayTagRevealAnim(false)
-                setTimeout(() => {
-                    setTagModalVisible(false)
-                }, 200)
-            } else {
-                setTagModalVisible(true)
-                setPlayTagRevealAnim(true)
-                setPlaySaveRevealAnim(false)
-                setTimeout(() => {
-                    setSaveModalVisible(false)
-                }, 200)
-            }
+            setSaveModalVisible(true)
+            setPlaySaveRevealAnim(true)
         }
     }
 
@@ -60,44 +50,44 @@ export default function NoteEditor() {
         const title = e.target.title.value
         setSaveStatus("saving ...")
 
-        const createNoteRes = await fetch("/api/note", {
-            method: "PUT",
-            body: JSON.stringify({ title: title, content: "" })
-        })
+        let id = noteID
+        if (id == -1) {
+            // creates a new, empty note
+            const createNoteRes = await fetch("/api/note", {
+                method: "PUT",
+                body: JSON.stringify({ title: title })
+            })
+    
+            id = (await createNoteRes.json()).noteID
+        }
 
-        const { noteID } = await createNoteRes.json()
-        note.childNodes.forEach(async (node) => {
-            if (node.nodeName == "IMG") {
-                const imgData = await (await fetch(node.src)).blob()
-                const formData = new FormData()
-                formData.append("image", imgData, `${title}-img`)
-                formData.append("noteID", noteID)
+        for (const node of note.childNodes) {
+            if (node.nodeName == "IMG" && node.src.includes("blob:")) {
+                console.log("converting image element src");
+                const imgData = await (await fetch(node.src)).blob();
+                const formData = new FormData();
+                formData.append("image", imgData, `${title}-img`);
+                formData.append("noteID", noteID);
+        
                 const createImageRes = await fetch("/api/image", {
                     method: "POST",
                     body: formData
-                })
-
-                const { imageID } = await createImageRes.json()
-                node.src = `${window.location.href}/api/image?imageID=${imageID}`
+                });
+        
+                const { imageID } = await createImageRes.json();
+                node.src = `${window.location.href}api/image?imageID=${imageID}`;
             }
-        })
+        }
 
         await fetch(`/api/note/`, {
             method: "POST",
-            body: JSON.stringify({ noteID: noteID, tags: tags, content: note.innerHTML })
+            body: JSON.stringify({ noteID: id, name: name, content: note.innerHTML })
         })
+
+        if (name != noteName) {
+            setForceUpdate(!forceUpdate)
+        }
         setSaveStatus("saved")
-    }
-
-    const addTag = (e) => {
-        e.preventDefault()
-
-        setTags([...tags, e.target.tag.value])
-        toggleModal("tag")
-    }
-
-    const removeTag = (tag) => {
-        setTags(tags.filter((t) => t != tag))
     }
 
     /* note editor functions */
@@ -228,24 +218,6 @@ export default function NoteEditor() {
 
     return (
         <div className={`${basestyles.container} ${styles.container}`}>
-            {tagModalVisible &&
-                <div className={`${styles.modal} ${playTagRevealAnim ? styles.revealModal : ""}`}>
-                    <form onSubmit={addTag}>
-                        <label htmlFor="tag">Add a tag</label>
-                        <br />
-                        <input
-                            className={`${basestyles.textInput} ${styles.textInput}`}
-                            type="text"
-                            name="tag"
-                            id="tag"
-                            placeholder="tag name"
-                            required
-                            autoComplete="off"
-                        />
-                        <button className={`${basestyles.button} ${styles.button}`} type="submit">add</button>
-                    </form>
-                </div>
-            }
             {saveModalVisible &&
                 <div className={`${styles.modal} ${playSaveRevealAnim ? styles.revealModal : ""}`}>
                     {isLoggedIn ?
@@ -258,6 +230,8 @@ export default function NoteEditor() {
                                     type="text"
                                     name="title"
                                     id="title"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                     placeholder="note title"
                                     required
                                     autoComplete="off"
@@ -273,22 +247,7 @@ export default function NoteEditor() {
                     }
                 </div>
             }
-            <div className={styles.tagList}>
-                {tags.map((tag) => (
-                    <Tag key={tag} name={tag} removeTag={removeTag} />
-                ))}
-            </div>
             <div className={styles.overlay}>
-                <div className={styles.tagContainer}>
-                    <div className={styles.icon} onClick={() => toggleModal("tag")}>
-                        <Image
-                            src="/tag.svg"
-                            width={30}
-                            height={30}
-                            alt="add tag"
-                        />
-                    </div>
-                </div>
                 <div className={styles.formatPalette}>
                     <div className={styles.icon} onClick={() => toggleBold()}>
                         <Image
@@ -315,7 +274,7 @@ export default function NoteEditor() {
                         alt="trash note"
                     />
                 </div>
-                <div className={styles.icon} onClick={() => toggleModal("save")}>
+                <div className={styles.icon} onClick={() => toggleModal()}>
                     <Image
                         src="/save.svg"
                         width={35}
@@ -324,7 +283,10 @@ export default function NoteEditor() {
                     />
                 </div>
             </div>
-            <div contentEditable id="editor" onPaste={handlePaste} onKeyDown={handleNewLines} className={styles.note} spellCheck="false" />
+            {isLoading ? <div className={styles.note}>Loading ... </div>
+                : <div contentEditable id="editor" onPaste={handlePaste} onKeyDown={handleNewLines} className={styles.note} spellCheck="false" />
+            }
+
         </div>
     )
 }

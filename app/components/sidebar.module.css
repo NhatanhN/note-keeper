@@ -1,0 +1,47 @@
+.container {
+    padding: 0;
+}
+
+.iconContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    border-bottom: 1px solid var(--color-borders);
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .2s;
+    margin: 5px;
+    padding: 5px;
+}
+
+.icon:hover {
+    background-color: var(--color-background-focused);
+}
+
+.icon:active {
+    background-color: var(--color-button-active);
+}
+
+.note {
+    padding: 5px;
+    border-bottom: 1px solid var(--color-borders);
+}
+
+.note:hover {
+    background-color: var(--color-background-focused);
+}
+
+.note:active {
+    background-color: var(--color-button-active);
+}
+
+.title {
+    font-size: smaller;
+}
+
+.tags {
+    display: flex;
+}

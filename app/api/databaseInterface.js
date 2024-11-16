@@ -50,8 +50,9 @@ async function getImage(imageID) {
     return imageData
 }
 
-async function deleteImage() {
-
+async function deleteImage(id) {
+    const location = path.join(process.cwd(), "file-store", "images", `${id}.png`)
+    await fs.unlink(location)
 }
 
 async function createUser(name, email, password) {
@@ -91,7 +92,23 @@ async function createUser(name, email, password) {
 }
 
 async function deleteUser(id) {
+    const notes = await db.note.findMany({
+        where: {
+            uploader: {
+                id: id
+            }
+        }
+    })
 
+    await db.user.delete({
+        where: {
+            id: id
+        }
+    })
+
+    for (const note of notes) {
+        await deleteNote(note.id)
+    }
 }
 
 async function validateLogin(usernameOrEmail, password) {
@@ -118,7 +135,14 @@ async function validateLogin(usernameOrEmail, password) {
     }
 }
 
-async function createNote(userID, title, content) {
+/**
+ * creates an empty note
+ * 
+ * @param {*} userID 
+ * @param {*} title 
+ * @returns 
+ */
+async function createNote(userID, title) {
     const noteDir = path.join(process.cwd(), "file-store", "notes")
     const note = await db.note.create({
         data: {
@@ -131,16 +155,41 @@ async function createNote(userID, title, content) {
         }
     })
     const id = note.id
-    await fs.writeFile(path.join(noteDir, `${id}`), content)
-    return id
+    await fs.writeFile(path.join(noteDir, `${id}`), "")
+    return note
 }
 
-async function deleteNote() {
+async function deleteNote(id) {
+    const images = await db.image.findMany({
+        where: {
+            note: {
+                id: id
+            }
+        }
+    })
 
+    await db.note.delete({
+        where: {
+            id: id
+        }
+    })
+
+    for (const image of images) {
+        await deleteImage(image.id)
+    }
+    
+    const location = path.join(process.cwd(), "file-store", "notes", `${id}`)
+    await fs.unlink(location)
 }
 
-// for now, is nearly the same as just creating a note
-async function updateNote(noteID, content) {
+/**
+ * overwrites the note with the new contents
+ * 
+ * @param {*}} noteID 
+ * @param {*} content 
+ * @param {*} name 
+ */
+async function updateNote(noteID, content, name) {
     const noteDir = path.join(process.cwd(), "file-store", "notes")
     await fs.writeFile(path.join(noteDir, `${noteID}`), content)
     const note = await db.note.update({
@@ -148,7 +197,8 @@ async function updateNote(noteID, content) {
             id: noteID
         },
         data: {
-            lastUpdatedOn: (new Date()).toISOString()
+            lastUpdatedOn: (new Date()).toISOString(),
+            name: name
         }
     });
 }
@@ -157,6 +207,17 @@ async function getNote(noteID) {
     const location = path.join(process.cwd(), "file-store", "notes", noteID)
     const noteData = await fs.readFile(location)
     return noteData
+}
+
+async function getNotesForUser(userID) {
+    const notes = await db.note.findMany({
+        where: {
+            uploader: {
+                id: userID
+            }
+        }
+    });
+    return notes
 }
 
 export {
@@ -169,5 +230,5 @@ export {
     getNote,
     uploadImage,
     getImage,
-    deleteImage
+    getNotesForUser
 }
