@@ -79,16 +79,15 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
                 body: JSON.stringify({ title: title })
             })
 
-            id = (await createNoteRes.json()).noteID
+            id = (await createNoteRes.json()).note.id
         }
 
         for (const node of note.childNodes) {
             if (node.nodeName == "IMG" && node.src.includes("blob:")) {
-                console.log("converting image element src");
                 const imgData = await (await fetch(node.src)).blob();
                 const formData = new FormData();
-                formData.append("image", imgData, `${title}-img`);
-                formData.append("noteID", noteID);
+                formData.append("image", imgData, `${title}.png`);
+                formData.append("noteID", id);
 
                 const createImageRes = await fetch("/api/image", {
                     method: "POST",

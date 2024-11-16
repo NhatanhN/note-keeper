@@ -23,6 +23,9 @@ export default function Sidebar({ setActiveNote, forceUpdate }) {
         (async () => {
             const isLoggedIn = document.cookie.includes("sessionToken")
             setIsLoggedIn(isLoggedIn)
+            if (!isLoggedIn) {
+                return
+            }
             let res, data
             res = await fetch("/api/user")
             data = await res.json()
