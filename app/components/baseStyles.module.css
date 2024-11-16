@@ -33,7 +33,7 @@
     border-bottom: 1px solid var(--color-borders-2); 
     padding: 3px 7px;
     width: 100%;
-    color: var(--color)
+    color: var(--color);
 }
 
 .textInput:hover {

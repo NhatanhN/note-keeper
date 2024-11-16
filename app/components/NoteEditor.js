@@ -1,35 +1,99 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import basestyles from "./baseStyles.module.css"
 import styles from "./noteEditor.module.css"
 import Image from "next/image"
 import Tag from "./Tag"
 
 export default function NoteEditor() {
-    const [tags, setTags] = useState(["test value"])
+    const [tags, setTags] = useState([])
     const [tagModalVisible, setTagModalVisible] = useState(false)
     const [playTagRevealAnim, setPlayTagRevealAnim] = useState(false)
+    const [saveModalVisible, setSaveModalVisible] = useState(false)
+    const [playSaveRevealAnim, setPlaySaveRevealAnim] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [saveStatus, setSaveStatus] = useState("")
+
+    useEffect(() => {
+        setIsLoggedIn(document.cookie.includes("sessionToken"))
+    }, [])
 
     /* overlay functions */
 
-    const toggleTagModal = () => {
-        if (tagModalVisible) {
-            setPlayTagRevealAnim(false)
-            setTimeout(() => {
-                setTagModalVisible(false)
-            }, 200)
+    const toggleModal = (selection) => {
+        setSaveStatus("")
+        if (selection == "save") {
+            if (saveModalVisible) {
+                setPlaySaveRevealAnim(false)
+                setTimeout(() => {
+                    setSaveModalVisible(false)
+                }, 200)
+            } else {
+                setSaveModalVisible(true)
+                setPlaySaveRevealAnim(true)
+                setPlayTagRevealAnim(false)
+                setTimeout(() => {
+                    setTagModalVisible(false)
+                }, 200)
+            }
         } else {
-            setTagModalVisible(true)
-            setPlayTagRevealAnim(true)
+            if (tagModalVisible) {
+                setPlayTagRevealAnim(false)
+                setTimeout(() => {
+                    setTagModalVisible(false)
+                }, 200)
+            } else {
+                setTagModalVisible(true)
+                setPlayTagRevealAnim(true)
+                setPlaySaveRevealAnim(false)
+                setTimeout(() => {
+                    setSaveModalVisible(false)
+                }, 200)
+            }
         }
+    }
+
+    const saveNote = async (e) => {
+        e.preventDefault()
+        const note = document.getElementById("editor")
+        const title = e.target.title.value
+        setSaveStatus("saving ...")
+
+        const createNoteRes = await fetch("/api/note", {
+            method: "PUT",
+            body: JSON.stringify({ title: title, content: "" })
+        })
+
+        const { noteID } = await createNoteRes.json()
+        note.childNodes.forEach(async (node) => {
+            if (node.nodeName == "IMG") {
+                const imgData = await (await fetch(node.src)).blob()
+                const formData = new FormData()
+                formData.append("image", imgData, `${title}-img`)
+                formData.append("noteID", noteID)
+                const createImageRes = await fetch("/api/image", {
+                    method: "POST",
+                    body: formData
+                })
+
+                const { imageID } = await createImageRes.json()
+                node.src = `${window.location.href}/api/image?imageID=${imageID}`
+            }
+        })
+
+        await fetch(`/api/note/`, {
+            method: "POST",
+            body: JSON.stringify({ noteID: noteID, tags: tags, content: note.innerHTML })
+        })
+        setSaveStatus("saved")
     }
 
     const addTag = (e) => {
         e.preventDefault()
 
         setTags([...tags, e.target.tag.value])
-        toggleTagModal()
+        toggleModal("tag")
     }
 
     const removeTag = (tag) => {
@@ -169,9 +233,44 @@ export default function NoteEditor() {
                     <form onSubmit={addTag}>
                         <label htmlFor="tag">Add a tag</label>
                         <br />
-                        <input className={`${basestyles.textInput} ${styles.textInput}`} type="text" name="tag" id="tag" placeholder="tag name"/>
+                        <input
+                            className={`${basestyles.textInput} ${styles.textInput}`}
+                            type="text"
+                            name="tag"
+                            id="tag"
+                            placeholder="tag name"
+                            required
+                            autoComplete="off"
+                        />
                         <button className={`${basestyles.button} ${styles.button}`} type="submit">add</button>
                     </form>
+                </div>
+            }
+            {saveModalVisible &&
+                <div className={`${styles.modal} ${playSaveRevealAnim ? styles.revealModal : ""}`}>
+                    {isLoggedIn ?
+                        <>
+                            <form onSubmit={saveNote}>
+                                <label htmlFor="title">Save your note</label>
+                                <br />
+                                <input
+                                    className={`${basestyles.textInput} ${styles.textInput}`}
+                                    type="text"
+                                    name="title"
+                                    id="title"
+                                    placeholder="note title"
+                                    required
+                                    autoComplete="off"
+                                />
+                                <div className={styles.saveButtonContainer}>
+                                    <button className={`${basestyles.button} ${styles.button}`} type="submit">save</button>
+                                    <p className={styles.saveStatus}>{saveStatus}</p>
+                                </div>
+                            </form>
+                        </> : <>
+                            <p>You must be logged in to save your note</p>
+                        </>
+                    }
                 </div>
             }
             <div className={styles.tagList}>
@@ -181,7 +280,7 @@ export default function NoteEditor() {
             </div>
             <div className={styles.overlay}>
                 <div className={styles.tagContainer}>
-                    <div className={styles.icon} onClick={() => toggleTagModal()}>
+                    <div className={styles.icon} onClick={() => toggleModal("tag")}>
                         <Image
                             src="/tag.svg"
                             width={30}
@@ -216,8 +315,16 @@ export default function NoteEditor() {
                         alt="trash note"
                     />
                 </div>
+                <div className={styles.icon} onClick={() => toggleModal("save")}>
+                    <Image
+                        src="/save.svg"
+                        width={35}
+                        height={35}
+                        alt="save icon"
+                    />
+                </div>
             </div>
-            <div contentEditable onPaste={handlePaste} onKeyDown={handleNewLines} className={styles.note} spellCheck="false" />
+            <div contentEditable id="editor" onPaste={handlePaste} onKeyDown={handleNewLines} className={styles.note} spellCheck="false" />
         </div>
     )
 }

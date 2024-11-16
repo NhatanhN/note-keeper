@@ -101,3 +101,13 @@
 .icon:active {
     background-color: var(--color-button-active);
 }
+
+.saveButtonContainer {
+    display: flex;
+    align-items: center;
+}
+
+.saveStatus {
+    font-size: smaller;
+    padding-left: 10px;
+}
