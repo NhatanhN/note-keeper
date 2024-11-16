@@ -12,6 +12,8 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
     /* gui + other state */
     const [saveModalVisible, setSaveModalVisible] = useState(false)
     const [playSaveRevealAnim, setPlaySaveRevealAnim] = useState(false)
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+    const [playDeleteRevealAnim, setPlayDeleteRevealAnim] = useState(false)
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [saveStatus, setSaveStatus] = useState("")
@@ -31,7 +33,7 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
 
     /* overlay functions */
 
-    const toggleModal = () => {
+    const toggleSaveModal = () => {
         setSaveStatus("")
         if (saveModalVisible) {
             setPlaySaveRevealAnim(false)
@@ -43,6 +45,25 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
             setPlaySaveRevealAnim(true)
         }
     }
+
+    const toggleDeleteModal = () => {
+        if (noteID == -1) return
+        if (deleteModalVisible) {
+            setPlayDeleteRevealAnim(false)
+            setTimeout(() => {
+                setDeleteModalVisible(false)
+            }, 200)
+        } else {
+            setDeleteModalVisible(true)
+            setPlayDeleteRevealAnim(true)
+        }
+    }
+
+    const preventEventPropagation = (e) => {
+        e.stopPropagation()
+    }
+
+    /* note editor functions */
 
     const saveNote = async (e) => {
         e.preventDefault()
@@ -57,7 +78,7 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
                 method: "PUT",
                 body: JSON.stringify({ title: title })
             })
-    
+
             id = (await createNoteRes.json()).noteID
         }
 
@@ -68,12 +89,12 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
                 const formData = new FormData();
                 formData.append("image", imgData, `${title}-img`);
                 formData.append("noteID", noteID);
-        
+
                 const createImageRes = await fetch("/api/image", {
                     method: "POST",
                     body: formData
                 });
-        
+
                 const { imageID } = await createImageRes.json();
                 node.src = `${window.location.href}api/image?imageID=${imageID}`;
             }
@@ -90,7 +111,15 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
         setSaveStatus("saved")
     }
 
-    /* note editor functions */
+    const deleteNote = async () => {
+        await fetch(`/api/note`, {
+            method: "DELETE",
+            body: JSON.stringify({ noteID: noteID })
+        })
+
+        location.reload()
+    }
+
     const handleNewLines = (e) => {
         if (e.key == "Enter") {
             e.preventDefault()
@@ -218,6 +247,24 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
 
     return (
         <div className={`${basestyles.container} ${styles.container}`}>
+            {deleteModalVisible &&
+                <div
+                    className={`${styles.deleteModalContainer} ${playDeleteRevealAnim ? styles.revealModal : ""}`}
+                    onClick={() => toggleDeleteModal()}
+                >
+                    <div
+                        className={`${styles.deleteModal} ${playDeleteRevealAnim ? styles.revealModal : ""}`}
+                        onClick={(e) => preventEventPropagation(e)}
+                    >
+                        <p>Are you sure you want to delete this note?</p> <br />
+                        <div className={styles.deleteButtonContainer}>
+                            <button className={`${basestyles.button} ${styles.button}`} onClick={() => deleteNote()}>yes</button>
+                            <div className={styles.spacing} />
+                            <button className={`${basestyles.button} ${styles.button}`} onClick={() => toggleDeleteModal()}>no</button>
+                        </div>
+                    </div>
+                </div>
+            }
             {saveModalVisible &&
                 <div className={`${styles.modal} ${playSaveRevealAnim ? styles.revealModal : ""}`}>
                     {isLoggedIn ?
@@ -266,7 +313,7 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
                         />
                     </div>
                 </div>
-                <div className={styles.icon}>
+                <div className={styles.icon} onClick={() => toggleDeleteModal()}>
                     <Image
                         src="/trash.svg"
                         width={35}
@@ -274,7 +321,7 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
                         alt="trash note"
                     />
                 </div>
-                <div className={styles.icon} onClick={() => toggleModal()}>
+                <div className={styles.icon} onClick={() => toggleSaveModal()}>
                     <Image
                         src="/save.svg"
                         width={35}

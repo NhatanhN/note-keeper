@@ -27,6 +27,9 @@ function GlobalContextProvider({ children }) {
             if (cookies[cookie].split("=")[0].trim() == "username") {
                 setUsername(cookies[cookie].split("=")[1])
             }
+            if (cookies[cookie].split("=")[0].trim() == "theme") {
+                setTheme(cookies[cookie].split("=")[1])
+            }
         }
 
         if (theme == "light") {

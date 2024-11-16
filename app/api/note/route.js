@@ -55,7 +55,7 @@ export async function POST(request) {
 }
 
 /**
- * unimplemented as of now
+ * deletes a note and all images associated with it
  * 
  * @param {*} request 
  * @returns 
@@ -65,4 +65,8 @@ export async function DELETE(request) {
     if (!sessionToken) return new Response("Unauthorized", { status: 401 })
     const { userID } = verifyToken(sessionToken)
     if (!userID) return new Response("Unauthorized", { status: 401 })
+
+    const { noteID } = await request.json()
+    deleteNote(noteID)
+    return new Response("OK", { status: 200 })
 }

@@ -48,10 +48,6 @@
     padding: 20px;
 }
 
-.revealModal {
-    opacity: 1;
-}
-
 @keyframes reveal {
     from {opacity: 0;}
     to {opacity: 1;}
@@ -95,4 +91,46 @@
 .saveStatus {
     font-size: smaller;
     padding-left: 10px;
+}
+
+.deleteModalContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, .8);
+    animation: reveal .25s;
+    transition: .25s cubic-bezier(0.165, 0.84, 0.44, 1);
+    opacity: 0;
+}
+
+.deleteModal {
+    width: 400px;
+    position: relative;
+    bottom: 50px;
+    height: 150px;
+    border-radius: 12px;
+    border: 1px solid var(--color-borders-2);
+    background-color: var(--color-background);
+    animation: reveal .25s;
+    transition: .25s cubic-bezier(0.165, 0.84, 0.44, 1);
+    opacity: 0;
+    padding: 20px;
+}
+
+.revealModal {
+    opacity: 1;
+}
+
+.deleteButtonContainer {
+    display: flex;
+}
+
+.spacing {
+    flex-grow: 1;
 }
