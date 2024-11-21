@@ -86,6 +86,7 @@ export default function LoginForm({ isRegistering }) {
                     type="text"
                     name="username"
                     placeholder="username"
+                    autoComplete="off"
                     required
                 />
                 <input
@@ -94,6 +95,7 @@ export default function LoginForm({ isRegistering }) {
                     type="email"
                     name="email"
                     placeholder="email"
+                    autoComplete="off"
                     required
                 />
                 <input
@@ -130,6 +132,7 @@ export default function LoginForm({ isRegistering }) {
                 type="text"
                 name="username"
                 placeholder="username or email"
+                autoComplete="off"
                 required
             />
             <input

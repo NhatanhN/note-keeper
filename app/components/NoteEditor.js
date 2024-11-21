@@ -1,11 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
+import { NoteContext } from "../applicationContexts/NoteEditorContext"
 import basestyles from "./baseStyles.module.css"
 import styles from "./noteEditor.module.css"
 import Image from "next/image"
 
 export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpdate }) {
+    /* context */
+    const { font, fontSize } = useContext(NoteContext)
+
     /* note metadata state */
     const [name, setName] = useState(noteName)
 
@@ -330,7 +334,14 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
                 </div>
             </div>
             {isLoading ? <div className={styles.note}>Loading ... </div>
-                : <div contentEditable id="editor" onPaste={handlePaste} onKeyDown={handleNewLines} className={styles.note} spellCheck="false" />
+                : <div
+                    contentEditable id="editor"
+                    onPaste={handlePaste}
+                    onKeyDown={handleNewLines}
+                    className={styles.note}
+                    spellCheck="false"
+                    style={{ fontFamily: font, fontSize: fontSize + "px" }}
+                />
             }
 
         </div>

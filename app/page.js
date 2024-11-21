@@ -6,6 +6,7 @@ import Header from "./components/Header"
 import Sidebar from "./components/Sidebar"
 import NoteEditor from "./components/NoteEditor"
 import { GlobalContextProvider } from "./applicationContexts/GlobalContext"
+import { NoteContextProvider } from "./applicationContexts/NoteEditorContext"
 import { useState } from "react"
 
 export default function Home() {
@@ -17,20 +18,22 @@ export default function Home() {
     return (
         <div className={`${styles.widescreenOrganization}`}>
             <GlobalContextProvider>
-                <div className={styles.header}>
-                    <Header />
-                </div>
-                <div className={styles.sidebar}>
-                    <Sidebar setActiveNote={setActiveNote} forceUpdate={forceUpdate}/>
-                </div>
-                <div className={styles.noteEditor}>
-                    <NoteEditor
-                        noteID={activeNote[0]}
-                        noteName={activeNote[1]}
-                        forceUpdate={forceUpdate}
-                        setForceUpdate={setForceUpdate}
-                    />
-                </div>
+                <NoteContextProvider>
+                    <div className={styles.header}>
+                        <Header />
+                    </div>
+                    <div className={styles.sidebar}>
+                        <Sidebar setActiveNote={setActiveNote} forceUpdate={forceUpdate}/>
+                    </div>
+                    <div className={styles.noteEditor}>
+                            <NoteEditor
+                                noteID={activeNote[0]}
+                                noteName={activeNote[1]}
+                                forceUpdate={forceUpdate}
+                                setForceUpdate={setForceUpdate}
+                            />
+                    </div>
+                </NoteContextProvider>
             </GlobalContextProvider>
         </div>
     );

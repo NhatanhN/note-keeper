@@ -32,3 +32,18 @@
 .button {
     width: 35%;
 }
+
+.select {
+    background-color: inherit;
+    font: inherit;
+    font-size: large;
+    border: none;
+    padding: 2px 10px;
+    color: inherit;
+    transition: .1s;
+    width: 70%;
+}
+
+.select:hover {
+    background-color: var(--color-background-2);
+}

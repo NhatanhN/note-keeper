@@ -43,8 +43,7 @@ function GlobalContextProvider({ children }) {
 
     const changeTheme = (theme) => {
         const root = document.documentElement
-        const test = theme
-        for (let key of Object.entries(test)) {
+        for (let key of Object.entries(theme)) {
             root.style.setProperty(key[0], key[1])
         }
     }
