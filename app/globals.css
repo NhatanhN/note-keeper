@@ -16,3 +16,21 @@
     padding: 0;
     margin: 0;
 }
+
+/* ensures only the note editor is printed */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #editor {
+        visibility: visible;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    #editor * {
+        visibility: visible;
+    }
+}

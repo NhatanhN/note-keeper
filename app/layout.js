@@ -9,12 +9,12 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
     const cookieStore = await cookies()
-    const theme = cookieStore.get("theme").value
+    const theme = cookieStore.get("theme")?.value
 
 
     return (
         <html lang="en"
-            style={theme == "light" ? {...light}
+            style={theme == undefined || theme == "light" ? {...light}
                 : theme == "dark" ? {...dark}
                 : {...night}
             }

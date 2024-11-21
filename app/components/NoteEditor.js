@@ -123,6 +123,11 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
         location.reload()
     }
 
+    const downloadNote = () => {
+        if (!isLoggedIn) return
+        window.print()
+    }
+
     const handleNewLines = (e) => {
         if (e.key == "Enter") {
             e.preventDefault()
@@ -324,6 +329,14 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
                         alt="trash note"
                     />
                 </div>
+                <div className={styles.icon} onClick={downloadNote}>
+                    <Image
+                        src="/download.svg"
+                        width={40}
+                        height={40}
+                        alt="download note"
+                    />
+                </div>
                 <div className={styles.icon} onClick={() => toggleSaveModal()}>
                     <Image
                         src="/save.svg"
@@ -335,7 +348,8 @@ export default function NoteEditor({ noteID, noteName, forceUpdate, setForceUpda
             </div>
             {isLoading ? <div className={styles.note}>Loading ... </div>
                 : <div
-                    contentEditable id="editor"
+                    contentEditable
+                    id="editor"
                     onPaste={handlePaste}
                     onKeyDown={handleNewLines}
                     className={styles.note}
